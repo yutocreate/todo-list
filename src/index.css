@@ -11,3 +11,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+h1{
+  margin:0;
+}
+
+h3{
+  margin:0;
+}
+
+.inputForm{
+  background:lightblue;
+}
+.incompleteTodos{
+  background:lightyellow;
+  height:200px;
+}
+.incompleteTodosInProgress{
+  background:lightgreen;
+  height:200px;
+}
+.completeTodos{
+  background:lightpink;
+  height:200px;
+}
