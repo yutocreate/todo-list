@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CompleteTodos from "./components/CompleteTodos";
 import IncompleteTodos from "./components/IncompleteTodos";
 import IncompleteTodosInProgress from "./components/IncompleteTodosInProgress";
 import InputForm from "./components/InputForm";
@@ -10,13 +11,13 @@ const App = () => {
     todos: [],
   });
   //進行中のtodoを格納する
-  const [InProgress, setInProgress] = useState({
+  const [inProgress, setInProgress] = useState({
     todos: [],
   });
   // 完了のtodoを格納する
-  // const [complete, setComplete] = useState({
-  //   todos: [],
-  // });
+  const [complete, setComplete] = useState({
+    todos: [],
+  });
 
   //分割代入でアクセスできるように！
   // const { todos } = state;
@@ -45,7 +46,33 @@ const App = () => {
     //newtodoは配列の中に１つのオブジェクト
     const newTodo = state.todos.filter((todo) => todo.id === id);
     //newTodosは配列の中に複数のオブジェクト
-    const newTodos = [...InProgress.todos, newTodo[0]];
+    const newTodos = [...inProgress.todos, newTodo[0]];
+    setInProgress({ todos: newTodos });
+  };
+
+  //完了へボタンを押した時、進行中のtodoから削除される and ゴミ箱をしても使っている
+  const goToCompleteToDelete = (id) => {
+    const newInCompleteTodosInProgress = inProgress.todos.filter(
+      (todo) => todo.id !== id
+    );
+    setInProgress({ todos: newInCompleteTodosInProgress });
+  };
+
+  //進行中のtodoが完了のtodoに移動
+  const goToComplete = (id) => {
+    const newTodo = inProgress.todos.filter((todo) => todo.id === id);
+    const newTodos = [...complete.todos, newTodo[0]];
+    setComplete({ todos: newTodos });
+  };
+  //戻すボタンを押した時、完了のtodoから削除される and ゴミ箱をしても使っている
+  const backInprogressPropsToDelete = (id) => {
+    const newCompleteTodos = complete.todos.filter((todo) => todo.id !== id);
+    setComplete({ todos: newCompleteTodos });
+  };
+  //完了のtodoが進行中のtodoに移動
+  const backInprogressProps = (id) => {
+    const newTodo = complete.todos.filter((todo) => todo.id === id);
+    const newTodos = [...inProgress.todos, newTodo[0]];
     setInProgress({ todos: newTodos });
   };
 
@@ -54,7 +81,7 @@ const App = () => {
       <h1>Todoアプリ</h1>
       <InputForm onSubmit={handleSubmit} />
       <div className="incompleteTodos">
-        <h3>未着手のTodo</h3>
+        <h3>未着手のTodos</h3>
         {state.todos.map(({ id, text }) => {
           return (
             <IncompleteTodos
@@ -67,28 +94,33 @@ const App = () => {
           );
         })}
       </div>
-
       <div className="incompleteTodosInProgress">
-        <h3>進行中のTodo</h3>
-        {InProgress.todos.map(({ id, text }) => {
-          return <IncompleteTodosInProgress key={id} id={id} text={text} />;
+        <h3>進行中のTodos</h3>
+        {inProgress.todos.map(({ id, text }) => {
+          return (
+            <IncompleteTodosInProgress
+              key={id}
+              id={id}
+              text={text}
+              goToCompleteToDelete={goToCompleteToDelete}
+              goToComplete={goToComplete}
+            />
+          );
         })}
       </div>
-
       <div className="completeTodos">
-        <h3>完了のTodo</h3>
-        <div className="incompleteTodo">
-          <input type="checkbox" />
-          いい
-          <button>戻る</button>
-          <button>ゴミ箱へ</button>
-        </div>
-        <div className="incompleteTodo">
-          <input type="checkbox" />
-          うう
-          <button>戻る</button>
-          <button>ゴミ箱へ</button>
-        </div>
+        <h3>完了のTodos</h3>
+        {complete.todos.map(({ id, text }) => {
+          return (
+            <CompleteTodos
+              key={id}
+              id={id}
+              text={text}
+              backInprogressPropsToDelete={backInprogressPropsToDelete}
+              backInprogressProps={backInprogressProps}
+            />
+          );
+        })}
       </div>
     </div>
   );
