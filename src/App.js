@@ -99,7 +99,7 @@ const App = () => {
     });
     setComplete({ todos: newTodos });
   };
-  //編集モードのキャンセル
+  //編集モードのキャンセルの挙動
   const onChangeCancel = (id, editing) => {
     const newTodos = state.todos.map((todo) => {
       if (todo.id === id) {
@@ -109,18 +109,25 @@ const App = () => {
     });
     setState({ todos: newTodos });
   };
-
-  const updateTodo = (id ,editing, text) => {
+  //編集モードの更新ボタンを挙動
+  const updateTodo = (id, editing, text) => {
     const newTodos = state.todos.map((todo) => {
-      if(todo.id === id){
+      if (todo.id === id) {
         return {
-          ...todo, text: text, editing: editing 
-        }
+          ...todo,
+          text: text,
+          editing: editing,
+        };
       }
-      return todo
-    })
-    setState({todos: newTodos})
-  }
+      return todo;
+    });
+    setState({ todos: newTodos });
+  };
+
+  const allCompleteDelete = () => {
+    const newTodos = complete.todos.filter(({ completed }) => !completed);
+    setComplete({ todos: newTodos });
+  };
 
   return (
     <div className="container">
@@ -138,7 +145,7 @@ const App = () => {
                   text={text}
                   editing={editing}
                   onChangeCancel={onChangeCancel}
-                  updateTodo ={updateTodo}
+                  updateTodo={updateTodo}
                 />
               ) : (
                 <IncompleteTodo
@@ -184,6 +191,9 @@ const App = () => {
             />
           );
         })}
+      </div>
+      <div className="allComplete">
+        <button onClick={allCompleteDelete}>チェック付き完了リストをまとめて削除</button>
       </div>
     </div>
   );
