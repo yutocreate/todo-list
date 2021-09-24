@@ -15,7 +15,7 @@ const IncompleteTodo = (props) => {
   };
 
   const editNow = () => {
-    const {id, editing, letsEdit } = props;
+    const { id, editing, letsEdit } = props;
     letsEdit(id, !editing);
   };
 

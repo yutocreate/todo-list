@@ -1,37 +1,47 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-h1{
-  margin:0;
+h1 {
+  margin: 0;
 }
 
-h3{
-  margin:0;
+h3 {
+  margin: 0;
 }
 
-.inputForm{
-  background:lightblue;
+.inputForm {
+  background: lightblue;
 }
-.incompleteTodos{
-  background:lightyellow;
-  height:200px;
+.incompleteTodos {
+  background: lightyellow;
+  height: 200px;
 }
-.incompleteTodosInProgress{
-  background:lightgreen;
-  height:200px;
+.incompleteTodosInProgress {
+  background: lightgreen;
+  height: 200px;
 }
-.completeTodos{
-  background:lightpink;
-  height:200px;
+
+.completeTodos {
+  background: lightpink;
+  height: 200px;
+}
+.incompleteTodos.display {
+  display: none;
+}
+.incompleteTodosInProgress.display {
+  display: none;
+}
+.completeTodos.display {
+  display: none;
 }

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import CompleteTodo from "./components/CompleteTodo";
 import EditForm from "./components/EditForm";
+import Filter from "./components/Filter";
 import IncompleteTodo from "./components/IncompleteTodo";
 import IncompleteTodoInProgress from "./components/IncompleteTodoInProgress";
 import InputForm from "./components/InputForm";
@@ -19,10 +20,12 @@ const App = () => {
   const [complete, setComplete] = useState({
     todos: [],
   });
+  const [filt, setFilt] = useState({ filter: "all" });
+  const divElementInComplete = useRef(null);
+  const divElementInCompleteProgress = useRef(null);
+  const divElementComplete = useRef(null);
 
-  //分割代入でアクセスできるように！
-  // const { todos } = state;
-  // console.log(todos)
+  const { filter } = filt;
 
   //todoに追加するタイミングでプロパティを持たせ、今後活用しやすくする
   const handleSubmit = (todoText) => {
@@ -129,11 +132,39 @@ const App = () => {
     setComplete({ todos: newTodos });
   };
 
+  const handleChangeFilter = (filter) => {
+    setFilt({ filter });
+  };
+
+  useEffect(() => {
+    if (filter === "all") {
+      divElementInComplete.current.classList.remove("display");
+      divElementInCompleteProgress.current.classList.remove("display");
+      divElementComplete.current.classList.remove("display");
+    }
+  }, [filter]);
+  if (filter === "incomplete") {
+    divElementInComplete.current.classList.remove("display");
+    divElementInCompleteProgress.current.classList.add("display");
+    divElementComplete.current.classList.add("display");
+  }
+  if (filter === "progress") {
+    divElementInComplete.current.classList.add("display");
+    divElementInCompleteProgress.current.classList.remove("display");
+    divElementComplete.current.classList.add("display");
+  }
+  if (filter === "complete") {
+    divElementInComplete.current.classList.add("display");
+    divElementInCompleteProgress.current.classList.add("display");
+    divElementComplete.current.classList.remove("display");
+  }
+
   return (
     <div className="container">
       <h1>Todoアプリ</h1>
       <InputForm onSubmit={handleSubmit} />
-      <div className="incompleteTodos">
+      <Filter filter={filter} onChange={handleChangeFilter} />
+      <div ref={divElementInComplete} className="incompleteTodos">
         <h3>未着手のTodos</h3>
         {state.todos.map(({ id, text, editing }) => {
           return (
@@ -162,7 +193,10 @@ const App = () => {
           );
         })}
       </div>
-      <div className="incompleteTodosInProgress">
+      <div
+        ref={divElementInCompleteProgress}
+        className="incompleteTodosInProgress "
+      >
         <h3>進行中のTodos</h3>
         {inProgress.todos.map(({ id, text }) => {
           return (
@@ -176,7 +210,7 @@ const App = () => {
           );
         })}
       </div>
-      <div className="completeTodos">
+      <div ref={divElementComplete} className="completeTodos">
         <h3>完了のTodos</h3>
         {complete.todos.map(({ id, text, completed }) => {
           return (
@@ -193,7 +227,9 @@ const App = () => {
         })}
       </div>
       <div className="allComplete">
-        <button onClick={allCompleteDelete}>チェック付き完了リストをまとめて削除</button>
+        <button onClick={allCompleteDelete}>
+          チェック付き完了リストをまとめて削除
+        </button>
       </div>
     </div>
   );
