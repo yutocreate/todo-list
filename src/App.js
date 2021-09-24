@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import CompleteTodos from "./components/CompleteTodos";
-import IncompleteTodos from "./components/IncompleteTodos";
-import IncompleteTodosInProgress from "./components/IncompleteTodosInProgress";
+import CompleteTodo from "./components/CompleteTodo";
+import EditForm from "./components/EditForm";
+import IncompleteTodo from "./components/IncompleteTodo";
+import IncompleteTodoInProgress from "./components/IncompleteTodoInProgress";
 import InputForm from "./components/InputForm";
 
 let nowId = 0;
@@ -28,6 +29,8 @@ const App = () => {
     const newTodo = {
       id: nowId,
       text: todoText,
+      editing: false,
+      completed: true,
     };
     const newTodos = [...state.todos, newTodo];
     setState({ todos: newTodos });
@@ -75,6 +78,49 @@ const App = () => {
     const newTodos = [...inProgress.todos, newTodo[0]];
     setInProgress({ todos: newTodos });
   };
+  //編集ボタンをクリック時の挙動
+  const letsEdit = (id, editing) => {
+    const newTodos = state.todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, editing: editing };
+      }
+      return todo;
+    });
+    setState({ todos: newTodos });
+  };
+
+  //完了のチェックボックスを外す
+  const changeComplete = (id, completed) => {
+    const newTodos = complete.todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, completed: completed };
+      }
+      return todo;
+    });
+    setComplete({ todos: newTodos });
+  };
+  //編集モードのキャンセル
+  const onChangeCancel = (id, editing) => {
+    const newTodos = state.todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, editing: editing };
+      }
+      return todo;
+    });
+    setState({ todos: newTodos });
+  };
+
+  const updateTodo = (id ,editing, text) => {
+    const newTodos = state.todos.map((todo) => {
+      if(todo.id === id){
+        return {
+          ...todo, text: text, editing: editing 
+        }
+      }
+      return todo
+    })
+    setState({todos: newTodos})
+  }
 
   return (
     <div className="container">
@@ -82,15 +128,30 @@ const App = () => {
       <InputForm onSubmit={handleSubmit} />
       <div className="incompleteTodos">
         <h3>未着手のTodos</h3>
-        {state.todos.map(({ id, text }) => {
+        {state.todos.map(({ id, text, editing }) => {
           return (
-            <IncompleteTodos
-              key={id}
-              id={id}
-              text={text}
-              goToInProgressToDelete={goToInProgressDelete}
-              goToInProgress={goToInProgress}
-            />
+            <div key={id}>
+              {editing ? (
+                <EditForm
+                  key={text}
+                  id={id}
+                  text={text}
+                  editing={editing}
+                  onChangeCancel={onChangeCancel}
+                  updateTodo ={updateTodo}
+                />
+              ) : (
+                <IncompleteTodo
+                  key={id}
+                  id={id}
+                  text={text}
+                  editing={editing}
+                  goToInProgressToDelete={goToInProgressDelete}
+                  goToInProgress={goToInProgress}
+                  letsEdit={letsEdit}
+                />
+              )}
+            </div>
           );
         })}
       </div>
@@ -98,7 +159,7 @@ const App = () => {
         <h3>進行中のTodos</h3>
         {inProgress.todos.map(({ id, text }) => {
           return (
-            <IncompleteTodosInProgress
+            <IncompleteTodoInProgress
               key={id}
               id={id}
               text={text}
@@ -110,14 +171,16 @@ const App = () => {
       </div>
       <div className="completeTodos">
         <h3>完了のTodos</h3>
-        {complete.todos.map(({ id, text }) => {
+        {complete.todos.map(({ id, text, completed }) => {
           return (
-            <CompleteTodos
+            <CompleteTodo
               key={id}
               id={id}
               text={text}
+              completed={completed}
               backInprogressPropsToDelete={backInprogressPropsToDelete}
               backInprogressProps={backInprogressProps}
+              onChange={changeComplete}
             />
           );
         })}

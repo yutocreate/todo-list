@@ -1,7 +1,7 @@
 import React from "react";
 
-const CompleteTodos = (props) => {
-  const { text } = props;
+const CompleteTodo = (props) => {
+  const { text, completed } = props;
 
   const backInProgress = () => {
     const {id, backInprogressPropsToDelete, backInprogressProps} = props
@@ -14,9 +14,13 @@ const CompleteTodos = (props) => {
     backInprogressPropsToDelete(id)
   }
 
+  const handleComplete = () => {
+    const {id, onChange, completed} = props
+    onChange(id, !completed)
+  }
   return (
     <div className="completeTodo">
-      <input type="checkbox" checked="true" />
+      <input type="checkbox" checked={completed} onChange={handleComplete}/>
       {text}
       <button onClick={backInProgress} >戻す</button>
       <button onClick={deleteComplete} >ゴミ箱へ</button>
@@ -24,4 +28,4 @@ const CompleteTodos = (props) => {
   );
 };
 
-export default CompleteTodos;
+export default CompleteTodo;

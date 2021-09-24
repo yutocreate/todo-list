@@ -1,6 +1,6 @@
 import React from "react";
 
-const IncompleteTodosInProgress = (props) => {
+const IncompleteTodoInProgress = (props) => {
   const { text } = props;
 
   const goToIncomplete = () => {
@@ -16,7 +16,6 @@ const IncompleteTodosInProgress = (props) => {
 
   return (
     <div className="incompleteTodo">
-      <input type="checkbox" />
       {text}
       <button onClick={goToIncomplete}>完了へ</button>
       <button onClick={deleteIncompletetoodsInOrogress}>ゴミ箱へ</button>
@@ -24,4 +23,4 @@ const IncompleteTodosInProgress = (props) => {
   );
 };
 
-export default IncompleteTodosInProgress;
+export default IncompleteTodoInProgress;
