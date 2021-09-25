@@ -1,5 +1,5 @@
 body {
-  margin: 0;
+  margin: 0 8px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -14,27 +14,51 @@ code {
 
 h1 {
   margin: 0;
+  color: orange;
 }
 
 h3 {
   margin: 0;
+  color: white;
 }
-
+button {
+  padding: 4px;
+  background: white;
+  border: none;
+  margin: 4px 4px;
+  cursor: pointer;
+  border-radius: 50%;
+}
 .inputForm {
-  background: lightblue;
+  border-radius: 8px;
+  background: salmon;
 }
 .incompleteTodos {
-  background: lightyellow;
-  height: 200px;
+  background: tomato;
+  height: 100%;
+  border-radius: 8px;
+  min-height: 50px;
 }
 .incompleteTodosInProgress {
-  background: lightgreen;
-  height: 200px;
+  background: sandybrown;
+  min-height: 50px;
+  border-radius: 8px;
+  height: 100%;
 }
 
+option,
+select {
+  border-radius: 50%;
+  border-radius: 8px;
+  cursor: pointer;
+  background: wheat;
+  border: none;
+}
 .completeTodos {
-  background: lightpink;
-  height: 200px;
+  background: red;
+  min-height: 50px;
+  border-radius: 8px;
+  height: 100%;
 }
 .incompleteTodos.display {
   display: none;
@@ -44,4 +68,12 @@ h3 {
 }
 .completeTodos.display {
   display: none;
+}
+.allComplete {
+  border-radius: 8px;
+  background: mediumturquoise;
+  width: 258px;
+}
+.allComplete > button {
+  border-radius: 8px;
 }
