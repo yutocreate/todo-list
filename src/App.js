@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import CompleteTodo from "./components/CompleteTodo";
 import EditForm from "./components/EditForm";
 import Filter from "./components/Filter";
@@ -21,9 +21,6 @@ const App = () => {
     todos: [],
   });
   const [filt, setFilt] = useState({ filter: "all" });
-  const divElementInComplete = useRef(null);
-  const divElementInCompleteProgress = useRef(null);
-  const divElementComplete = useRef(null);
 
   const { filter } = filt;
 
@@ -33,7 +30,8 @@ const App = () => {
       id: nowId,
       text: todoText,
       editing: false,
-      completed: true,
+      progress: false,
+      completed: false,
     };
     const newTodos = [...state.todos, newTodo];
     setState({ todos: newTodos });
@@ -51,6 +49,7 @@ const App = () => {
   const goToInProgress = (id) => {
     //newtodoは配列の中に１つのオブジェクト
     const newTodo = state.todos.filter((todo) => todo.id === id);
+    newTodo[0].progress = true;
     //newTodosは配列の中に複数のオブジェクト
     const newTodos = [...inProgress.todos, newTodo[0]];
     setInProgress({ todos: newTodos });
@@ -67,6 +66,8 @@ const App = () => {
   //進行中のtodoが完了のtodoに移動
   const goToComplete = (id) => {
     const newTodo = inProgress.todos.filter((todo) => todo.id === id);
+    newTodo[0].progress = false;
+    newTodo[0].completed = true;
     const newTodos = [...complete.todos, newTodo[0]];
     setComplete({ todos: newTodos });
   };
@@ -136,37 +137,61 @@ const App = () => {
     setFilt({ filter });
   };
 
-  useEffect(() => {
-    if (filter === "all") {
-      divElementInComplete.current.classList.remove("display");
-      divElementInCompleteProgress.current.classList.remove("display");
-      divElementComplete.current.classList.remove("display");
+  // const filterStateTodos = state.todos.filter(({fliter}) => { return true;
+  //   }
+  // )
+  const filterStateTodos = state.todos.filter(() => {
+    switch (filter) {
+      case "all":
+        return true;
+      case "incomplete":
+        return true;
+      case "progress":
+        return false;
+      case "complete":
+        return false;
+      default:
+        return true;
     }
-  }, [filter]);
-  if (filter === "incomplete") {
-    divElementInComplete.current.classList.remove("display");
-    divElementInCompleteProgress.current.classList.add("display");
-    divElementComplete.current.classList.add("display");
-  }
-  if (filter === "progress") {
-    divElementInComplete.current.classList.add("display");
-    divElementInCompleteProgress.current.classList.remove("display");
-    divElementComplete.current.classList.add("display");
-  }
-  if (filter === "complete") {
-    divElementInComplete.current.classList.add("display");
-    divElementInCompleteProgress.current.classList.add("display");
-    divElementComplete.current.classList.remove("display");
-  }
+  });
+
+  const filterInProgressTodos = inProgress.todos.filter(() => {
+    switch (filter) {
+      case "all":
+        return true;
+      case "incomplete":
+        return false;
+      case "progress":
+        return true;
+      case "complete":
+        return false;
+      default:
+        return true;
+    }
+  });
+  const filterCompleteTodos = complete.todos.filter(() => {
+    switch (filter) {
+      case "all":
+        return true;
+      case "incomplete":
+        return false;
+      case "progress":
+        return false;
+      case "complete":
+        return true;
+      default:
+        return true;
+    }
+  });
 
   return (
     <div className="container">
       <h1>Todoアプリ</h1>
       <InputForm onSubmit={handleSubmit} />
       <Filter filter={filter} onChange={handleChangeFilter} />
-      <div ref={divElementInComplete} className="incompleteTodos">
+      <div className="incompleteTodos">
         <h3>未着手のTodos</h3>
-        {state.todos.map(({ id, text, editing }) => {
+        {filterStateTodos.map(({ id, text, editing }) => {
           return (
             <div key={id}>
               {editing ? (
@@ -193,12 +218,9 @@ const App = () => {
           );
         })}
       </div>
-      <div
-        ref={divElementInCompleteProgress}
-        className="incompleteTodosInProgress "
-      >
+      <div className="incompleteTodosInProgress ">
         <h3>進行中のTodos</h3>
-        {inProgress.todos.map(({ id, text }) => {
+        {filterInProgressTodos.map(({ id, text }) => {
           return (
             <IncompleteTodoInProgress
               key={id}
@@ -210,9 +232,9 @@ const App = () => {
           );
         })}
       </div>
-      <div ref={divElementComplete} className="completeTodos">
+      <div className="completeTodos">
         <h3>完了のTodos</h3>
-        {complete.todos.map(({ id, text, completed }) => {
+        {filterCompleteTodos.map(({ id, text, completed }) => {
           return (
             <CompleteTodo
               key={id}
